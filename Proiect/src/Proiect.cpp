@@ -48,7 +48,7 @@ Game* theGame;
 GLfloat texpts[2][2][2] = { {{1.0, 1.0},{1.0, 0.0}},{{0.0, 1.0},{0.0, 0.0} } };
 #define imageWidth 64
 #define imageHeight 64
-GLubyte image[3 * imageWidth*imageHeight];
+//GLubyte image[3 * imageWidth*imageHeight];
 GLuint texture1;
 
 int loading = 0;
@@ -141,6 +141,7 @@ void changeSize(int w, int h) {
 
 		// Get Back to the Modelview
 		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
 	}
 	else
 	{
@@ -148,6 +149,7 @@ void changeSize(int w, int h) {
 		glLoadIdentity();
 		glOrtho(-1*WIDTH, WIDTH, -1*HEIGHT, HEIGHT, -1.0f, 1.0f);
 		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
 	}
 }
 
@@ -265,6 +267,14 @@ void processKeys(unsigned char key, int x, int y) {
 		mainMenu = true;
 		creds = false;
 		instr = false;
+		start3D = 0;
+		loading = 0;
+		angle = 0.0f;
+		lx=0.0f,lz=-1.0f;
+		x=0.0f, z=0.0f;
+		deltaAngle = 0.0f;
+		deltaMove = 0;
+		extern Game* theGame;
 		glutPostRedisplay();
 	}
 }
