@@ -37,6 +37,7 @@ Plate plates[30];
 #define LEVEL4 4
 
 int dead = 0;
+int level = 1;
 
 static int gameStatus = START;
 
@@ -144,6 +145,7 @@ void Game::level1()
 			shape->setY(shape->getY() - 0.1);
 		}
 		else {
+			level = 1;
 			shape = &player;
 			gameStatus = GAME_OVER;
 			shape->setZ(0);
@@ -232,6 +234,7 @@ void Game::level2() {
 		}
 		else
 		{
+			level = 2;
 			gameStatus = GAME_OVER;
 			shape->setY(2);
 			dead = 0;
@@ -319,6 +322,7 @@ void Game::level3()
 		}
 		else
 		{
+			level = 3;
 			gameStatus = GAME_OVER;
 			shape->setY(2);
 			dead = 0;
@@ -405,6 +409,7 @@ void Game::level4()
 		}
 		else
 		{
+			level = 4;
 			gameStatus = GAME_OVER;
 			shape->setY(2);
 			dead = 0;
@@ -443,10 +448,12 @@ void Game::display()
 		break;
 
 	case GAME_OVER:
-		gameStatus = START;
+		gameStatus = level;
 		shape = &player;
 		shape->setX(0);
 		shape->setZ(0);
+		player.pos = -1;
+		player.temp_pos = -1;
 		break;
 	}
 }

@@ -69,7 +69,9 @@ void LoadTextureLava2(void)
 
 
 void Player::spawn() {
-
+	if (this->pos==-1 and this->temp_pos==-1){
+		currentKey = START;
+	} 
 	if (currentKey == START) {
 
 		this->spawnFromTop();
