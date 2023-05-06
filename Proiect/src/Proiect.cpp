@@ -27,6 +27,16 @@ float x=0.0f, z=0.0f;
 //when no key is being presses
 float deltaAngle = 0.0f;
 float deltaMove = 0;
+// Saving current window size
+int currWidth = 1920;
+int currHeight = 1080;
+// Whether in-game or on title screen
+int WIDTH = 640/2;
+int HEIGHT = 480/2;
+bool title = true;		//for any of the below menu pages, this will be true
+bool mainMenu = true; 	//for main-menu
+bool instr = false;		//for instructions screen
+bool creds = false;		//for credits screen
 
 #define unit 10
 int FPS = 100;
@@ -78,8 +88,15 @@ void updateFunc(int value)
 
 void keyFunction(int key, int x, int y) {
 
-	theGame->onMove(key, x, y);
-	stop = 1;
+	if (!title)
+	{
+		theGame->onMove(key, x, y);
+		stop = 1;
+	}
+	else
+	{
+		//some code if necessary
+	}
 	glutPostRedisplay();
 }
 
@@ -92,7 +109,7 @@ void myinit(void)
     glFogfv(GL_FOG_COLOR, fogColor);
         glFogf(GL_FOG_DENSITY, 0.0027);
         glHint(GL_FOG_HINT, GL_DONT_CARE);
-        glFogf(GL_FOG_START, 1.0);
+        glFogf(GL_FOG_START, 0.1);
         glFogf(GL_FOG_END, 1.0);
 
     glClearColor(0.7, 0.7, 0.7, 1.0);
@@ -100,27 +117,38 @@ void myinit(void)
 }
 
 void changeSize(int w, int h) {
-
+	currWidth = w;
+	currHeight = h;
 	// Prevent a divide by zero, when window is too short
 	// (you cant make a window of zero width).
-	if (h == 0)
-		h = 1;
-	float ratio =  w * 1.0 / h;
+	if (!title)
+	{
+		if (h == 0)
+			h = 1;
+		float ratio =  w * 1.0 / h;
 
-	// Use the Projection Matrix
-	glMatrixMode(GL_PROJECTION);
+		// Use the Projection Matrix
+		glMatrixMode(GL_PROJECTION);
 
-	// Reset Matrix
-	glLoadIdentity();
+		// Reset Matrix
+		glLoadIdentity();
 
-	// Set the viewport to be the entire window
-	glViewport(0, 0, w, h);
+		// Set the viewport to be the entire window
+		glViewport(0, 0, w, h);
 
-	// Set the correct perspective.
-	gluPerspective(45.0f, ratio, 0.1f, 200.0f);
+		// Set the correct perspective.
+		gluPerspective(45.0f, ratio, 0.1f, 200.0f);
 
-	// Get Back to the Modelview
-	glMatrixMode(GL_MODELVIEW);
+		// Get Back to the Modelview
+		glMatrixMode(GL_MODELVIEW);
+	}
+	else
+	{
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glOrtho(-1*WIDTH, WIDTH, -1*HEIGHT, HEIGHT, -1.0f, 1.0f);
+		glMatrixMode(GL_MODELVIEW);
+	}
 }
 
 void computePos(float deltaMove) {
@@ -201,54 +229,203 @@ void drawGround(){
 }
 void processKeys(unsigned char key, int x, int y) {
 
-	switch (key)
+	if (key == ' ')
 	{
-		case ' ':
-			start3D = 1;
-			theGame->start();
-			break;
+		
+		title = false;
+		mainMenu = false;
+		creds = false;
+		instr = false;
+		start3D = 1;
+		theGame->start();
+	}
+	else if (key == 'I' || key == 'i')
+	{
+		title = true;
+		mainMenu = false;
+		creds = false;
+		instr = true;
+		glutPostRedisplay();
+	}
+	else if (key == 'C' || key == 'c')
+	{
+		title = true;
+		mainMenu = false;
+		creds = true;
+		instr = false;
+		glutPostRedisplay();
+	}
+	else if (key == 'Q' || key == 'q')
+	{
+		// function for smooth exiting of the game
+	}
+	else if (key == 27)
+	{
+		title = true;
+		mainMenu = true;
+		creds = false;
+		instr = false;
+		glutPostRedisplay();
+	}
+}
 
+void LoadTextureTitle(string str)
+{
+    GLuint texture;
+    glGenTextures(1, &texture);
+    glBindTexture(GL_TEXTURE_2D, texture);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);	// Set texture wrapping to GL_REPEAT
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    int width, height;
+    // sursa imaginii https://www.hiclipart.com/free-transparent-background-png-clipart-miami
+    unsigned char* image = SOIL_load_image(str.c_str(), &width, &height, 0, SOIL_LOAD_RGB);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+    
+}
+
+
+void titleScreen(void){
+	glClearColor(0.300, 0.140, 0.140, 1.00);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	if (mainMenu)
+	{
+		glEnable(GL_TEXTURE_2D);
+		LoadTextureTitle("game_title.jpg");
+		glBegin(GL_POLYGON);
+		glTexCoord2f(1.0, 0.0);glVertex3f( -100, 150.0, 0.0);
+		glTexCoord2f(0.0, 0.0);glVertex3f( 120, 150.0, 0.0);
+		glTexCoord2f(0.0, 1.0);glVertex3f( 120, 190.0, 0.0);
+		glTexCoord2f(1.0, 1.0);glVertex3f( -100, 190.0, 0.0);
+		glEnd();
+		glDisable(GL_TEXTURE_2D);
+		
+		glRasterPos3f(-70, 00, 0);
+		char heading1[] = "Press Spacebar to start the game";
+		for (int i = 0; i<strlen(heading1); i++)
+			glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, heading1[i]);
+		glRasterPos3f(-70, -20, 0);
+		char heading2[] = "Press I to read instruction to the game";
+		for (int i = 0; i<strlen(heading2); i++)
+			glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, heading2[i]);
+		glRasterPos3f(-70, -40, 0);
+		char heading3[] = "Press C to see the credits";
+		for (int i = 0; i<strlen(heading3); i++)
+			glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, heading3[i]);
+		glRasterPos3f(-70,-60, 0);
+		char heading4[] = "Press Esc to return to the main screen at any time";
+		for (int i = 0; i<strlen(heading4); i++)
+			glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, heading4[i]);
+		glRasterPos3f(-70,-80, 0);
+		char heading5[] = "Press Q to return to Quit the game";
+		for (int i = 0; i<strlen(heading5); i++)
+			glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, heading5[i]);
+		
+		
+	}
+	else if (creds){
+
+		glEnable(GL_TEXTURE_2D);
+		LoadTextureTitle("credits.jpg");
+		glBegin(GL_POLYGON);
+		glTexCoord2f(1.0, 0.0);glVertex3f( -100, 150.0, 0.0);
+		glTexCoord2f(0.0, 0.0);glVertex3f( 100, 150.0, 0.0);
+		glTexCoord2f(0.0, 1.0);glVertex3f( 100, 190.0, 0.0);
+		glTexCoord2f(1.0, 1.0);glVertex3f( -100, 190.0, 0.0);
+		glEnd();
+		glDisable(GL_TEXTURE_2D);
+
+		glRasterPos3f(-70, 00, 0);
+		char heading1[] = "Chaitanya Manohar Giri (20BCS034)";
+		for (int i = 0; i<strlen(heading1); i++)
+			glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, heading1[i]);
+		glRasterPos3f(-70, -20, 0);
+		char heading2[] = "Harshal Ram Dube (20BCS052)";
+		for (int i = 0; i<strlen(heading2); i++)
+			glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, heading2[i]);
+		glRasterPos3f(-70, -40, 0);
+		char heading3[] = "Prathamesh P Pai (20BCS103)";
+		for (int i = 0; i<strlen(heading3); i++)
+			glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, heading3[i]);
+		glRasterPos3f(-70,-60, 0);
+		char heading4[] = "Samuel Mathew (20BCS116)";
+		for (int i = 0; i<strlen(heading4); i++)
+			glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, heading4[i]);
+	}
+	else if (instr)
+	{
+		glEnable(GL_TEXTURE_2D);
+		LoadTextureTitle("instructions.jpg");
+		glBegin(GL_POLYGON);
+		glTexCoord2f(1.0, 0.0);glVertex3f( -100, 150.0, 0.0);
+		glTexCoord2f(0.0, 0.0);glVertex3f( 95, 150.0, 0.0);
+		glTexCoord2f(0.0, 1.0);glVertex3f( 95, 190.0, 0.0);
+		glTexCoord2f(1.0, 1.0);glVertex3f( -100, 190.0, 0.0);
+		glEnd();
+		glDisable(GL_TEXTURE_2D);
+
+		glRasterPos3f(-170, 00, 0);
+		char heading1[] = "The objective of the game is to move the block along the maze.";
+		for (int i = 0; i<strlen(heading1); i++)
+			glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, heading1[i]);
+		glRasterPos3f(-170, -20, 0);
+		char heading2[] = "Player can use the arrow keys to move the block in 4 directions or press Esc to return to the main screen.";
+		for (int i = 0; i<strlen(heading2); i++)
+			glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, heading2[i]);
+		glRasterPos3f(-170, -40, 0);
+		char heading3[] = "The game ends when the block is standing upright over the hole in the maze.";
+		for (int i = 0; i<strlen(heading3); i++)
+			glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, heading3[i]);
 	}
 }
 
 void renderScene(void) {
-	glClearColor(0.300, 0.140, 0.140, 1.00);
-		if (deltaMove)
-			computePos(deltaMove);
-		if (deltaAngle)
-			computeDir(deltaAngle);
+	changeSize(currWidth, currHeight);
+	if (!title){
+		glClearColor(0.300, 0.140, 0.140, 1.00);
+			if (deltaMove)
+				computePos(deltaMove);
+			if (deltaAngle)
+				computeDir(deltaAngle);
 
-		// Clear Color and Depth Buffers
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			// Clear Color and Depth Buffers
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		// Reset transformations
-		glLoadIdentity();
+			// Reset transformations
+			glLoadIdentity();
 
-		gluLookAt(	22.8, 50.0, -58.75,
-					23.25, 49.5,  -57.85,
-						0.0f, 50.0f,  0.0f);
-
-
-		float cof[] = {0.6,0.7,0.7};
-		float poz[] = { 0, 100, 0, 1.0 };
-		glLightfv(GL_LIGHT0,GL_AMBIENT,cof);
-		glLightfv(GL_LIGHT0, GL_POSITION, poz);
-		glEnable(GL_LIGHTING);
-		glEnable(GL_LIGHT0);
-			drawGround();
+			gluLookAt(	22.8, 50.0, -58.75,
+						23.25, 49.5,  -57.85,
+							0.0f, 50.0f,  0.0f);
 
 
-			if (start3D == 1) {
-			theGame->display();
-			}
-			glutPostRedisplay();
+			float cof[] = {0.6,0.7,0.7};
+			float poz[] = { 0, 100, 0, 1.0 };
+			glLightfv(GL_LIGHT0,GL_AMBIENT,cof);
+			glLightfv(GL_LIGHT0, GL_POSITION, poz);
+			glEnable(GL_LIGHTING);
+			glEnable(GL_LIGHT0);
+				drawGround();
 
 
-			myinit();
+				if (start3D == 1) {
+				theGame->display();
+				}
+				glutPostRedisplay();
 
-		//theGame->display();
-		glFlush();
-		glutSwapBuffers();
+
+				myinit();
+	}
+	else
+	{
+		titleScreen();
+	}
+	//theGame->display();
+	glFlush();
+	glutSwapBuffers();
 }
 
 
