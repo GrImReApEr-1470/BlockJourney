@@ -115,7 +115,7 @@ void Game::level1()
 	int player_i = shape->getX() / 10;
 	int player_j = shape->getZ() / 10;
 
-	if (matrice[player_i][player_j] == 2)
+	if (matrice[player_i][player_j] == 2 && player.temp_pos==0)
 	{
 		dead = 1;
 		cout << "FINISH" << endl;
@@ -201,7 +201,7 @@ void Game::level2() {
 	int player_i = shape->getX() / 10;
 	int player_j = shape->getZ() / 10;
 
-	if (matrice[player_i][player_j] == 2)
+	if (matrice[player_i][player_j] == 2 && player.temp_pos == 0)
 	{
 		dead = 1;
 
@@ -287,7 +287,7 @@ void Game::level3()
 	int player_i = shape->getX() / 10;
 	int player_j = shape->getZ() / 10;
 
-	if (matrice[player_i][player_j] == 2)
+	if (matrice[player_i][player_j] == 2 && player.temp_pos == 0)
 	{
 		dead = 1;
 
@@ -374,7 +374,7 @@ void Game::level4()
 	int player_i = shape->getX() / 10;
 	int player_j = shape->getZ() / 10;
 
-	if (matrice[player_i][player_j] == 2)
+	if (matrice[player_i][player_j] == 2 && player.temp_pos == 0)
 	{
 		dead = 1;
 

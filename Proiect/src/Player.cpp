@@ -21,7 +21,6 @@ int topkey = 0;
 int rightKey = 0;
 int downKey = 0;
 
-int temp_pos = 0;
 int standing = 0;
 
 int themove = 0;
@@ -75,6 +74,7 @@ void Player::spawn() {
 
 		this->spawnFromTop();
 		this->pos = 0;
+		this->temp_pos = 0;
 
 	} else if (currentKey == LEFT) {
 		// if standing
@@ -82,7 +82,7 @@ void Player::spawn() {
 			this->spawnLateralDown();
 			if (themove - lastMove != 0) {
 				lastMove +=1;
-				temp_pos = 1;
+				this->temp_pos = 1;
 			}
 		}
 		// if sleeping in x
@@ -90,7 +90,7 @@ void Player::spawn() {
 			this->spawnFromTop();
 			if (themove - lastMove != 0) {
 				lastMove +=1;
-				temp_pos = 0;
+				this->temp_pos = 0;
 				this->x = this->x+10;
 			}
 		}
@@ -100,7 +100,7 @@ void Player::spawn() {
 			if (themove - lastMove != 0)
 			{
 				lastMove += 1;
-				temp_pos = 2;
+				this->temp_pos = 2;
 			}
 		}
 
@@ -110,7 +110,7 @@ void Player::spawn() {
 			this->spawnDownTop();
 			if(themove - lastMove !=0 ){
 				lastMove +=1;
-				temp_pos = 2;
+				this->temp_pos = 2;
 			}
 		}
 		// if sleeping in x
@@ -118,7 +118,7 @@ void Player::spawn() {
 			this->spawnLateralDown();
 			if(themove - lastMove !=0) {
 				lastMove +=1;
-				temp_pos = 1;
+				this->temp_pos = 1;
 			}
 		}
 		//if sleeping in z
@@ -126,7 +126,7 @@ void Player::spawn() {
 			this->spawnFromTop();
 			if(themove - lastMove !=0) {
 				lastMove +=1;
-				temp_pos = 0;
+				this->temp_pos = 0;
 				this->z = this->z + 10;
 			}
 		}
@@ -137,7 +137,7 @@ void Player::spawn() {
 			this->spawnLateralDown();
 			if (themove - lastMove != 0) {
 				lastMove +=1;
-				temp_pos = 1;
+				this->temp_pos = 1;
 				this->x = this->x - 10;
 			}
 		}
@@ -145,14 +145,14 @@ void Player::spawn() {
 			this->spawnFromTop();
 			if (themove - lastMove != 0) {
 				lastMove +=1;
-				temp_pos = 0;
+				this->temp_pos = 0;
 			}
 		}
 		else if (this->pos == 2) {
 			this->spawnDownTop();
 			if (themove - lastMove != 0) {
 				lastMove +=1;
-				temp_pos = 2;
+				this->temp_pos = 2;
 			}
 		}
 
@@ -163,7 +163,7 @@ void Player::spawn() {
 			this->spawnDownTop();
 			if(themove - lastMove !=0 ){
 				lastMove +=1;
-				temp_pos = 2;
+				this->temp_pos = 2;
 				this->z = this->z - 10;
 			}
 		}
@@ -171,14 +171,14 @@ void Player::spawn() {
 			this->spawnLateralDown();
 			if(themove - lastMove !=0) {
 				lastMove +=1;
-				temp_pos = 1;
+				this->temp_pos = 1;
 			}
 		}
 		else if (this->pos == 2) {
 			this->spawnFromTop();
 			if(themove - lastMove !=0) {
 				lastMove +=1;
-				temp_pos = 0;
+				this->temp_pos = 0;
 			}
 		}
 
@@ -224,8 +224,8 @@ void printLastKey(int last ){
 }
 
 void Player::onMove(int key,int x,int y) {
-	cout<<this->pos<<temp_pos<<endl;
-	this->pos = temp_pos;
+	cout<<this->pos<<this->temp_pos<<endl;
+	this->pos = this->temp_pos;
 	switch(key) {
 
 		case GLUT_KEY_LEFT:

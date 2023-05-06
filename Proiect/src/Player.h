@@ -14,6 +14,7 @@
 class Player : public Shape {
 public:
 	int pos = 0;  // is the player standing/sleeping in x/sleeping in y
+	int temp_pos = 0;
 	Player(float x,float y,float z):Shape(x,y,z) {}
 	void spawn();
 	Player();
