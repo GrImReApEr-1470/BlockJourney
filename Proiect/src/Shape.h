@@ -1,9 +1,3 @@
-/*
- * Shape.h
- *
- *  Created on: May 19, 2020
- *      Author: gabriel
- */
 
 #ifndef SHAPE_H_
 #define SHAPE_H_

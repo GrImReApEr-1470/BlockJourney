@@ -14,7 +14,8 @@ using namespace std;
 #include <GL/glut.h>
 #include <ao/ao.h>
 #include <mpg123.h>
-#include<thread>
+#include <thread>
+#include <unistd.h>
 #endif
 	
 void play_audio(string);
@@ -36,10 +37,12 @@ int currHeight = 1080;
 // Whether in-game or on title screen
 int WIDTH = 640/2;
 int HEIGHT = 480/2;
-bool title = true;		//for any of the below menu pages, this will be true
-bool mainMenu = true; 	//for main-menu
-bool instr = false;		//for instructions screen
-bool creds = false;		//for credits screen
+bool title = true;			//for any of the below menu pages, this will be true
+bool mainMenu = true; 		//for main-menu
+bool instr = false;			//for instructions screen
+bool creds = false;			//for credits screen
+bool exitScreen = false;	//for exit screen
+bool endProg = false;
 
 #define unit 10
 #define BITS 8
@@ -73,16 +76,15 @@ void LoadTextureLava(void)
 
     unsigned char* image = SOIL_load_image("lava_texture.png", &width, &height, 0, SOIL_LOAD_RGB);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
-    //SOIL_free_image_data(image);
-    //glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-void timer(int) {
+void timer(int value) {
+	if (value == 0)
+		return;
 	glutPostRedisplay();
-	glutTimerFunc(1000 / FPS, timer, 0);
-
-	cout<<"ANa are mere";
+	glutTimerFunc(1000, timer, value-1);
 }
+
 int stop = 0;
 void updateFunc(int value)
 {
@@ -254,6 +256,15 @@ void processKeys(unsigned char key, int x, int y) {
 		instr = true;
 		glutPostRedisplay();
 	}
+	else if (key == 'Q' || key == 'q')
+	{
+		title = true;
+		mainMenu = false;
+		creds = false;
+		instr = false;
+		exitScreen = true;
+		glutPostRedisplay();
+	}
 	else if (key == 'C' || key == 'c')
 	{
 		title = true;
@@ -261,10 +272,6 @@ void processKeys(unsigned char key, int x, int y) {
 		creds = true;
 		instr = false;
 		glutPostRedisplay();
-	}
-	else if (key == 'Q' || key == 'q')
-	{
-		// function for smooth exiting of the game
 	}
 	else if (key == 27)
 	{
@@ -301,12 +308,15 @@ void LoadTextureTitle(string str)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     int width, height;
-    // sursa imaginii https://www.hiclipart.com/free-transparent-background-png-clipart-miami
     unsigned char* image = SOIL_load_image(str.c_str(), &width, &height, 0, SOIL_LOAD_RGB);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
     
 }
 
+void exitAnimation(int value)
+{
+
+}
 
 void titleScreen(void){
 	glClearColor(0.300, 0.140, 0.140, 1.00);
@@ -340,7 +350,7 @@ void titleScreen(void){
 		for (int i = 0; i<strlen(heading4); i++)
 			glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, heading4[i]);
 		glRasterPos3f(-70,-80, 0);
-		char heading5[] = "Press Q to return to Quit the game";
+		char heading5[] = "Press Q to Quit the game";
 		for (int i = 0; i<strlen(heading5); i++)
 			glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, heading5[i]);
 		
@@ -400,6 +410,19 @@ void titleScreen(void){
 		for (int i = 0; i<strlen(heading3); i++)
 			glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, heading3[i]);
 	}
+	else if (exitScreen)
+	{
+		glEnable(GL_TEXTURE_2D);
+		LoadTextureTitle("thanks.jpg");
+		glBegin(GL_POLYGON);
+		glTexCoord2f(1.0, 0.0);glVertex3f( -320, -240.0, 0.0);
+		glTexCoord2f(0.0, 0.0);glVertex3f( 320, -240.0, 0.0);
+		glTexCoord2f(0.0, 1.0);glVertex3f( 320, 240.0, 0.0);
+		glTexCoord2f(1.0, 1.0);glVertex3f( -320, 240.0, 0.0);
+		glEnd();
+		glDisable(GL_TEXTURE_2D);
+		endProg = true;
+	}
 }
 
 void renderScene(void) {
@@ -446,6 +469,11 @@ void renderScene(void) {
 	}
 	else
 	{
+		if (endProg)
+		{
+			sleep(4);
+			exit(2);
+		}
 		titleScreen();
 	}
 	//theGame->display();

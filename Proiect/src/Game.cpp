@@ -1,10 +1,3 @@
-/*
- * Game.cpp
- *
- *  Created on: May 19, 2020
- *      Author: gabriel
- */
-
 #include "Shape.h"
 #include "Player.h"
 #include "Plate.h"
@@ -230,7 +223,6 @@ void Game::level2() {
 			shape->setZ(0);
 		}
 	}
-	// Facut toate cazurile pentru level 1
 	if (matrice[player_i][player_j] == 0 || shape->getX()<0 || shape->getZ()<0 || shape->getZ()>90 || shape->getX()>140)
 
 	{  
@@ -272,7 +264,7 @@ void Game::level3()
 		{1, 0, 0, 1, 0, 0, 0, 0, 0, 0},
 		{1, 1, 1, 1, 0, 0, 0, 0, 0, 0},
 		{1, 0, 1, 1, 1, 1, 0, 0, 0, 0},
-		{1, 0, 0, 0, 0, 1, 0, 0, 0, 0},
+		{1, 0, 1, 1, 1, 1, 0, 0, 0, 0},
 		{1, 0, 0, 0, 0, 1, 0, 0, 1, 0},
 		{1, 0, 1, 1, 0, 1, 0, 1, 1, 0},
 		{1, 0, 1, 1, 0, 1, 1, 1, 1, 1},
@@ -322,7 +314,6 @@ void Game::level3()
 			shape->setZ(0);
 		}
 	}
-	// Facut toate cazurile pentru level 1
 
 	if (matrice[player_i][player_j] == 0 || shape->getX()<0 || shape->getZ()<0 || shape->getZ()>90 || shape->getX()>140)
 
@@ -414,7 +405,6 @@ void Game::level4()
 			shape->setZ(0);
 		}
 	}
-	// Facut toate cazurile pentru level 1
 	if (matrice[player_i][player_j] == 0 || shape->getX()<0 || shape->getZ()<0 || shape->getZ()>90 || shape->getX()>140)
 
 	{   

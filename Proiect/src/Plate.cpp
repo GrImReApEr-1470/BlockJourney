@@ -1,10 +1,3 @@
-/*
- * Square.cpp
- *
- *  Created on: May 14, 2020
- *      Author: gabriel
- */
-
 #include "Plate.h"
 #include "SOIL/SOIL.h"
 #define imageWidth3 64
