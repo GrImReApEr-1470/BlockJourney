@@ -252,8 +252,7 @@ void Player::onMove(int key,int x,int y) {
 			cout <<"Current Key: ";
 			printLastKey(currentKey);
 			cout<<endl;
-			//cout<<"Pe lat" << peLat <<endl;
-			cout <<"In picioare " << standing <<endl;
+			cout <<"Standing " << standing <<endl;
 			break;
 
 		case GLUT_KEY_RIGHT:
@@ -277,7 +276,7 @@ void Player::onMove(int key,int x,int y) {
 			cout <<"Current Key: ";
 			printLastKey(currentKey);
 			cout<<endl;
-			cout <<"In picioare " << standing <<endl;
+			cout <<"Standing " << standing <<endl;
 			break;
 
 		case GLUT_KEY_UP:
@@ -301,7 +300,7 @@ void Player::onMove(int key,int x,int y) {
 			cout <<"Current Key:";
 			printLastKey(currentKey);
 			cout<<endl;
-			cout <<"In picioare " << standing <<endl;
+			cout <<"Standing " << standing <<endl;
 			break;
 
 		case GLUT_KEY_DOWN:
@@ -325,7 +324,7 @@ void Player::onMove(int key,int x,int y) {
 			cout <<"Current Key: ";
 			printLastKey(currentKey);
 			cout<<endl;
-			cout <<"In picioare " << standing <<endl;
+			cout <<"Standing " << standing <<endl;
 			break;
 	}
 

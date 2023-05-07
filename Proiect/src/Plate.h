@@ -1,4 +1,3 @@
-
 #ifndef PLATE_H_
 #define PLATE_H_
 #include <iostream>

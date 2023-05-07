@@ -1,10 +1,3 @@
-/*
- * Game.cpp
- *
- *  Created on: May 19, 2020
- *      Author: gabriel
- */
-
 #include "Shape.h"
 #include "Player.h"
 #include "Plate.h"
@@ -229,8 +222,7 @@ void Game::level2() {
 			shape->setZ(0);
 		}
 	}
-
-	if (matrice[player_i][player_j] == 0)
+	if (matrice[player_i][player_j] == 0 || shape->getX()<0 || shape->getZ()<0 || shape->getZ()>90 || shape->getX()>140)
 
 	{  
 		cout << "GAME OVER";
@@ -270,7 +262,7 @@ void Game::level3()
 		{1, 0, 0, 1, 0, 0, 0, 0, 0, 0},
 		{1, 1, 1, 1, 0, 0, 0, 0, 0, 0},
 		{1, 0, 1, 1, 1, 1, 0, 0, 0, 0},
-		{1, 0, 0, 0, 0, 1, 0, 0, 0, 0},
+		{1, 0, 1, 1, 1, 1, 0, 0, 0, 0},
 		{1, 0, 0, 0, 0, 1, 0, 0, 1, 0},
 		{1, 0, 1, 1, 0, 1, 0, 1, 1, 0},
 		{1, 0, 1, 1, 0, 1, 1, 1, 1, 1},
@@ -412,8 +404,7 @@ void Game::level4()
 		}
 	}
 
-	if (matrice[player_i][player_j] == 0)
-
+	if (matrice[player_i][player_j] == 0 || shape->getX()<0 || shape->getZ()<0 || shape->getZ()>90 || shape->getX()>140)
 	{   
 		cout << "GAME OVER";
 		if(playsplosh)
