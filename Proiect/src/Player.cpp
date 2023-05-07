@@ -57,8 +57,10 @@ void LoadTextureLava2(void)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     int width, height;
+
     unsigned char* image = SOIL_load_image("texture.jpg", &width, &height, 0, SOIL_LOAD_RGB);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+
 }
 
 
@@ -455,7 +457,7 @@ void Player::spawnFromTop() {
 }
 
 void Player::spawnDownTop() {
-	cout<<"sleeping in y"<<endl;
+
 	static GLfloat par_2[] = { 0.2, 0.2, 0.1, 1.0 };
 	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, par_2);
 	glColor3f(0.2f, 0.2f, 0.1f);
