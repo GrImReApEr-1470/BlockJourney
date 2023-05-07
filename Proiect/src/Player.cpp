@@ -4,11 +4,16 @@
  *  Created on: May 14, 2020
  *      Author: gabriel
  */
-
+#include<bits/stdc++.h>
 #include "Player.h"
 #include <iostream>
 #include "SOIL/SOIL.h"
+#include <ao/ao.h>
+#include <mpg123.h>
+#include<thread>
+using namespace std;
 
+void play_block_audio(string);
 Player::Player() {
 	// TODO Auto-generated constructor stub
 
@@ -228,6 +233,8 @@ void printLastKey(int last ){
 void Player::onMove(int key,int x,int y) {
 	cout<<this->pos<<this->temp_pos<<endl;
 	this->pos = this->temp_pos;
+	std::thread audio_thread(play_block_audio, "wood.mp3");
+    audio_thread.detach();
 	switch(key) {
 
 		case GLUT_KEY_LEFT:
@@ -508,4 +515,56 @@ void Player::spawnDownTop() {
 		glVertex3f( 10.0 + x, 10.0 + y, 20.0 + z);
 		glVertex3f( 10.0 + x, 10.0 + y, 0.0 + z);
 	glEnd();
+}
+
+void play_block_audio(string audioFile)
+{   
+
+    mpg123_handle *mh;
+    unsigned char *buffer;
+    size_t buffer_size;
+    size_t done;
+    int err;
+
+    int driver;
+    ao_device *dev;
+
+    ao_sample_format format;
+    int channels, encoding;
+    long rate;
+
+    /* initializations */
+    ao_initialize();
+    driver = ao_default_driver_id();
+    mpg123_init();
+    mh = mpg123_new(NULL, &err);
+    buffer_size = mpg123_outblock(mh);
+    buffer = (unsigned char*) malloc(buffer_size * sizeof(unsigned char));
+
+    /* open the file and get the decoding format */
+ 
+        mpg123_volume(mh, 0.5f);
+    	mpg123_open(mh, &audioFile[0]);
+    	mpg123_getformat(mh, &rate, &channels, &encoding);
+
+    	/* set the output format and open the output device */
+    	format.bits = mpg123_encsize(encoding) * 8;
+    	format.rate = rate;
+    	format.channels = channels;
+    	format.byte_format = AO_FMT_NATIVE;
+    	format.matrix = 0;
+    	dev = ao_open_live(driver, &format, NULL);
+
+    	/* decode and play */
+    	char *p =(char *)buffer;
+    	while (mpg123_read(mh, buffer, buffer_size, &done) == MPG123_OK)
+    	{   
+        	ao_play(dev, p, done);
+    	}
+	
+    /* clean up */
+    free(buffer);
+    ao_close(dev);
+    mpg123_close(mh);
+    mpg123_delete(mh);
 }

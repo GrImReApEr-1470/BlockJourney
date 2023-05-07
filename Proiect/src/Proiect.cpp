@@ -7,16 +7,19 @@
 #include "Game.h"
 #include <string.h>
 #include "SOIL/SOIL.h"
-
 using namespace std;
 #ifdef _APPLE_
 #include <GLUT/glut.h>
 #else
 #include <GL/glut.h>
+#include <ao/ao.h>
+#include <mpg123.h>
+#include<thread>
 #endif
-
-
-
+	
+void play_audio(string);
+bool playMusic = false;
+bool isMute = false;
 // angle of rotation for the camera direction
 float angle = 0.0f;
 // actual vector representing the camera's direction
@@ -39,6 +42,8 @@ bool instr = false;		//for instructions screen
 bool creds = false;		//for credits screen
 
 #define unit 10
+#define BITS 8
+
 int FPS = 100;
 
 int start3D = 0;
@@ -48,7 +53,7 @@ Game* theGame;
 GLfloat texpts[2][2][2] = { {{1.0, 1.0},{1.0, 0.0}},{{0.0, 1.0},{0.0, 0.0} } };
 #define imageWidth 64
 #define imageHeight 64
-GLubyte image[3 * imageWidth*imageHeight];
+//GLubyte image[3 * imageWidth*imageHeight];
 GLuint texture1;
 
 int loading = 0;
@@ -141,6 +146,7 @@ void changeSize(int w, int h) {
 
 		// Get Back to the Modelview
 		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
 	}
 	else
 	{
@@ -148,6 +154,7 @@ void changeSize(int w, int h) {
 		glLoadIdentity();
 		glOrtho(-1*WIDTH, WIDTH, -1*HEIGHT, HEIGHT, -1.0f, 1.0f);
 		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
 	}
 }
 
@@ -265,7 +272,20 @@ void processKeys(unsigned char key, int x, int y) {
 		mainMenu = true;
 		creds = false;
 		instr = false;
+		start3D = 0;
+		loading = 0;
+		angle = 0.0f;
+		lx=0.0f,lz=-1.0f;
+		x=0.0f, z=0.0f;
+		deltaAngle = 0.0f;
+		deltaMove = 0;
+		extern Game* theGame;
 		glutPostRedisplay();
+	}
+	else if (key == 's' || key == 'S')
+	{
+		isMute = (!isMute);
+		playMusic = false;
 	}
 }
 
@@ -383,6 +403,11 @@ void titleScreen(void){
 }
 
 void renderScene(void) {
+	if((!playMusic) && (!isMute))
+	{
+		std::thread audio_thread(play_audio, "wrong-place.mp3");
+    	audio_thread.detach();
+	}
 	changeSize(currWidth, currHeight);
 	if (!title){
 		glClearColor(0.300, 0.140, 0.140, 1.00);
@@ -429,6 +454,69 @@ void renderScene(void) {
 }
 
 
+void play_audio(string audioFile)
+{   
+	playMusic = true;
+    mpg123_handle *mh;
+    unsigned char *buffer;
+    size_t buffer_size;
+    size_t done;
+    int err;
+
+    int driver;
+    ao_device *dev;
+
+    ao_sample_format format;
+    int channels, encoding;
+    long rate;
+
+    /* initializations */
+    ao_initialize();
+    driver = ao_default_driver_id();
+    mpg123_init();
+    mh = mpg123_new(NULL, &err);
+    buffer_size = mpg123_outblock(mh);
+    buffer = (unsigned char*) malloc(buffer_size * sizeof(unsigned char));
+    
+
+    /* open the file and get the decoding format */
+    while(1)
+    {   
+
+    	mpg123_open(mh, &audioFile[0]);
+    	mpg123_getformat(mh, &rate, &channels, &encoding);
+
+    	/* set the output format and open the output device */
+    	format.bits = mpg123_encsize(encoding) * 8;
+    	format.rate = rate;
+    	format.channels = channels;
+    	format.byte_format = AO_FMT_NATIVE;
+    	format.matrix = 0;
+    	dev = ao_open_live(driver, &format, NULL);
+
+    	/* decode and play */
+        if(isMute)
+        	mpg123_volume(mh, 0.0f);
+        else
+        	mpg123_volume(mh,0.5f);
+    	char *p =(char *)buffer;
+    	while (mpg123_read(mh, buffer, buffer_size, &done) == MPG123_OK)
+    	{   
+
+    		if(isMute)
+        	mpg123_volume(mh, 0.0f);
+       		else
+        	mpg123_volume(mh,0.5f);
+        	ao_play(dev, p, done);
+    	}
+	}
+    /* clean up */
+    free(buffer);
+    ao_close(dev);
+    mpg123_close(mh);
+    mpg123_delete(mh);
+}
+
 int main(int argc, char **argv) {
 
 	theGame = new Game();
@@ -446,6 +534,7 @@ int main(int argc, char **argv) {
 
 	glutReshapeFunc(changeSize);
 	glutIdleFunc(renderScene);
+    
 
 	glutSpecialUpFunc(keyFunction);
 
