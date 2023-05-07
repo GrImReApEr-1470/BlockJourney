@@ -301,7 +301,6 @@ void LoadTextureTitle(string str)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     int width, height;
-    // sursa imaginii https://www.hiclipart.com/free-transparent-background-png-clipart-miami
     unsigned char* image = SOIL_load_image(str.c_str(), &width, &height, 0, SOIL_LOAD_RGB);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
     

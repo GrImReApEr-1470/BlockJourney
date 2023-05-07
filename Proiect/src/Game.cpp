@@ -138,7 +138,7 @@ void Game::level1()
 			shape->setZ(0);
 		}
 	}
-	// Facut toate cazurile pentru level 1
+
 	if (matrice[player_i][player_j] == 0)
 
 	{   
@@ -148,8 +148,7 @@ void Game::level1()
         	thread_audio("splosh.mp3");
         	playsplosh = false;
         }
-		//		if (shape->getZ() > -20)
-		//			shape->setZ(shape->getZ() - 0.1);
+
 		if (shape->getY() > -20.4)
 		{   
 			dead = 1;
@@ -230,7 +229,7 @@ void Game::level2() {
 			shape->setZ(0);
 		}
 	}
-	// Facut toate cazurile pentru level 1
+
 	if (matrice[player_i][player_j] == 0)
 
 	{  
@@ -241,8 +240,7 @@ void Game::level2() {
         	playsplosh = false;
         }
 
-		//		if (shape->getZ() > -20)
-		//			shape->setZ(shape->getZ() - 0.1);
+
 		if (shape->getY() > -20.4)
 		{
 			dead = 1;
@@ -322,7 +320,7 @@ void Game::level3()
 			shape->setZ(0);
 		}
 	}
-	// Facut toate cazurile pentru level 1
+
 
 	if (matrice[player_i][player_j] == 0)
 
@@ -333,8 +331,7 @@ void Game::level3()
         	thread_audio("splosh.mp3");
         	playsplosh = false;
         }
-		//		if (shape->getZ() > -20)
-		//			shape->setZ(shape->getZ() - 0.1);
+
 		if (shape->getY() > -20.4)
 		{
 			dead = 1;
@@ -414,7 +411,7 @@ void Game::level4()
 			shape->setZ(0);
 		}
 	}
-	// Facut toate cazurile pentru level 1
+
 	if (matrice[player_i][player_j] == 0)
 
 	{   
@@ -425,8 +422,7 @@ void Game::level4()
         	playsplosh = false;
         }
 
-		//		if (shape->getZ() > -20)
-		//			shape->setZ(shape->getZ() - 0.1);
+
 		if (shape->getY() > -20.4)
 		{
 			dead = 1;

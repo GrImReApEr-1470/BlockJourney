@@ -1,9 +1,3 @@
-/*
- * Square.h
- *
- *  Created on: May 14, 2020
- *      Author: gabriel
- */
 
 #ifndef PLATE_H_
 #define PLATE_H_

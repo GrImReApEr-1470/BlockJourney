@@ -1,10 +1,3 @@
-/*
- * Player.h
- *
- *  Created on: May 14, 2020
- *      Author: gabriel
- */
-
 #ifndef PLAYER_H_
 #define PLAYER_H_
 #include <GL/glut.h>
