@@ -15,10 +15,13 @@ using namespace std;
 #else
 #include <GL/glut.h>
 #endif
-
+#include <ao/ao.h>
+#include <mpg123.h>
+#include<thread>
 float const unit = 10.0;
-
 #include "Game.h"
+
+void thread_audio(string);
 Shape *shape;
 Player player(0, 2, 0);
 Plate plate1(0, 0, 0);
@@ -36,10 +39,11 @@ Plate plates[30];
 #define LEVEL3 3
 #define LEVEL4 4
 
+
 int dead = 0;
-
+bool playsplosh = true;
 static int gameStatus = START;
-
+void play_terminal_audio(string);
 Game::Game()
 {
 	// TODO Auto-generated constructor stub
@@ -133,13 +137,17 @@ void Game::level1()
 	// Facut toate cazurile pentru level 1
 	if (matrice[player_i][player_j] == 0)
 
-	{
+	{   
 		cout << "GAME OVER";
-
+		if(playsplosh)
+		{
+        	thread_audio("splosh.mp3");
+        	playsplosh = false;
+        }
 		//		if (shape->getZ() > -20)
 		//			shape->setZ(shape->getZ() - 0.1);
 		if (shape->getY() > -20.4)
-		{
+		{   
 			dead = 1;
 			shape->setY(shape->getY() - 0.1);
 		}
@@ -155,7 +163,7 @@ void Game::level1()
 }
 
 void Game::level2() {
-
+    
 	glPushMatrix();
 	shape = &player;
 	// glTranslatef(0, 0, 0);
@@ -220,8 +228,13 @@ void Game::level2() {
 	// Facut toate cazurile pentru level 1
 	if (matrice[player_i][player_j] == 0)
 
-	{
+	{  
 		cout << "GAME OVER";
+		if(playsplosh)
+		{
+        	thread_audio("splosh.mp3");
+        	playsplosh = false;
+        }
 
 		//		if (shape->getZ() > -20)
 		//			shape->setZ(shape->getZ() - 0.1);
@@ -307,9 +320,13 @@ void Game::level3()
 
 	if (matrice[player_i][player_j] == 0)
 
-	{
+	{   
 		cout << "GAME OVER";
-
+		if(playsplosh)
+		{
+        	thread_audio("splosh.mp3");
+        	playsplosh = false;
+        }
 		//		if (shape->getZ() > -20)
 		//			shape->setZ(shape->getZ() - 0.1);
 		if (shape->getY() > -20.4)
@@ -393,8 +410,13 @@ void Game::level4()
 	// Facut toate cazurile pentru level 1
 	if (matrice[player_i][player_j] == 0)
 
-	{
+	{   
 		cout << "GAME OVER";
+		if(playsplosh)
+		{
+        	thread_audio("splosh.mp3");
+        	playsplosh = false;
+        }
 
 		//		if (shape->getZ() > -20)
 		//			shape->setZ(shape->getZ() - 0.1);
@@ -411,7 +433,7 @@ void Game::level4()
 		}
 	}
 }
-
+bool winsound[4] {false};
 void Game::display()
 {
 
@@ -422,21 +444,34 @@ void Game::display()
 		break;
 
 	case LEVEL1:
+	    winsound[0] = true;
 		this->level1();
 		break;
 
 	case LEVEL2:
+	    if(winsound[0])
+	    	thread_audio("win.mp3");
+	    winsound[0] = false;
+	    winsound[1] = true;
 		shape = &player;
 		this->level2();
 		break;
 
 	case LEVEL3:
+		if(winsound[1])
+	    	thread_audio("win.mp3");
+	    winsound[1] = false;
+	    winsound[2] = true;
 		shape = &player;
 
 		this->level3();
 		break;
 
 	case LEVEL4:
+	    if(winsound[2])
+	    	thread_audio("win.mp3");
+	    winsound[2] = false;
+	    winsound[3] = true;
 		shape = &player;
 
 		this->level4();
@@ -444,6 +479,7 @@ void Game::display()
 
 	case GAME_OVER:
 		gameStatus = START;
+		playsplosh = true;
 		shape = &player;
 		shape->setX(0);
 		shape->setZ(0);
@@ -458,4 +494,60 @@ void Game::start()
 Game::~Game()
 {
 	// TODO Auto-generated destructor stub
+}
+void thread_audio(string name)
+{
+	std::thread audio_thread(play_terminal_audio, name);
+    audio_thread.detach();
+}
+void play_terminal_audio(string audioFile)
+{   
+    
+    mpg123_handle *mh;
+    unsigned char *buffer;
+    size_t buffer_size;
+    size_t done;
+    int err;
+
+    int driver;
+    ao_device *dev;
+
+    ao_sample_format format;
+    int channels, encoding;
+    long rate;
+
+    /* initializations */
+    ao_initialize();
+    driver = ao_default_driver_id();
+    mpg123_init();
+    mh = mpg123_new(NULL, &err);
+    buffer_size = mpg123_outblock(mh);
+    buffer = (unsigned char*) malloc(buffer_size * sizeof(unsigned char));
+
+    /* open the file and get the decoding format */
+ 
+        mpg123_volume(mh, 1.0f);
+    	mpg123_open(mh, &audioFile[0]);
+    	mpg123_getformat(mh, &rate, &channels, &encoding);
+
+    	/* set the output format and open the output device */
+    	format.bits = mpg123_encsize(encoding) * 8;
+    	format.rate = rate;
+    	format.channels = channels;
+    	format.byte_format = AO_FMT_NATIVE;
+    	format.matrix = 0;
+    	dev = ao_open_live(driver, &format, NULL);
+
+    	/* decode and play */
+    	char *p =(char *)buffer;
+    	while (mpg123_read(mh, buffer, buffer_size, &done) == MPG123_OK)
+    	{   
+        	ao_play(dev, p, done);
+    	}
+	
+    /* clean up */
+    free(buffer);
+    ao_close(dev);
+    mpg123_close(mh);
+    mpg123_delete(mh);
 }
