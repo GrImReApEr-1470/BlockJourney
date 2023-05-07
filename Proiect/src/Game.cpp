@@ -118,8 +118,8 @@ void Game::level1()
 
 	shape = &player;
 
-	cout << "X PLAYER index : " << shape->getX() / 10 << endl;
-	cout << "Z PLAYER index: " << shape->getZ() / 10 << endl;
+	cout << "X PLAYER index : " << shape->getX()  << endl;
+	cout << "Z PLAYER index: " << shape->getZ()  << endl;
 	int player_i = shape->getX() / 10;
 	int player_j = shape->getZ() / 10;
 
@@ -139,7 +139,7 @@ void Game::level1()
 		}
 	}
 	// Facut toate cazurile pentru level 1
-	if (matrice[player_i][player_j] == 0)
+	if (matrice[player_i][player_j] == 0 || shape->getX()<0 || shape->getZ()<0 || shape->getZ()>90 || shape->getX()>140)
 
 	{   
 		cout << "GAME OVER";
@@ -231,7 +231,7 @@ void Game::level2() {
 		}
 	}
 	// Facut toate cazurile pentru level 1
-	if (matrice[player_i][player_j] == 0)
+	if (matrice[player_i][player_j] == 0 || shape->getX()<0 || shape->getZ()<0 || shape->getZ()>90 || shape->getX()>140)
 
 	{  
 		cout << "GAME OVER";
@@ -324,7 +324,7 @@ void Game::level3()
 	}
 	// Facut toate cazurile pentru level 1
 
-	if (matrice[player_i][player_j] == 0)
+	if (matrice[player_i][player_j] == 0 || shape->getX()<0 || shape->getZ()<0 || shape->getZ()>90 || shape->getX()>140)
 
 	{   
 		cout << "GAME OVER";
@@ -415,7 +415,7 @@ void Game::level4()
 		}
 	}
 	// Facut toate cazurile pentru level 1
-	if (matrice[player_i][player_j] == 0)
+	if (matrice[player_i][player_j] == 0 || shape->getX()<0 || shape->getZ()<0 || shape->getZ()>90 || shape->getX()>140)
 
 	{   
 		cout << "GAME OVER";
