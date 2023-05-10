@@ -31,6 +31,7 @@ Plate plates[30];
 #define LEVEL2 2
 #define LEVEL3 3
 #define LEVEL4 4
+#define VICTORY 100
 
 
 int dead = 0;
@@ -39,11 +40,11 @@ bool playsplosh = true;
 
 int level = 1;
 
-static int gameStatus = START;
 void play_terminal_audio(string);
 Game::Game()
 {
 	// TODO Auto-generated constructor stub
+	gameStatus = START;
 }
 
 void Game::onMove(int key, int x, int y)
@@ -415,7 +416,7 @@ void Game::level4()
 		else
 		{
 			dead = 0;
-			gameStatus = START;
+			gameStatus = VICTORY;
 			shape->setX(0);
 			shape->setY(0);
 			shape->setZ(0);
