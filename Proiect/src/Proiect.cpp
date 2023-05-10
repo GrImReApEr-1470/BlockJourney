@@ -425,6 +425,12 @@ void titleScreen(void){
 	}
 }
 
+void victoryScreen()
+{
+	glClearColor(0.300, 0.140, 0.140, 1.00);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
 void renderScene(void) {
 	if((!playMusic) && (!isMute))
 	{
@@ -462,6 +468,10 @@ void renderScene(void) {
 				if (start3D == 1) {
 				theGame->display();
 				}
+			if (theGame->gameStatus == 100)
+			{
+				victoryScreen();
+			}
 				glutPostRedisplay();
 
 
