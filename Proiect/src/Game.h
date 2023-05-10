@@ -8,7 +8,7 @@ class Game
 {
 public:
 	Game();
-
+	int gameStatus;
 	void onMove(int key, int x, int y);
 	void update();
 	void display();

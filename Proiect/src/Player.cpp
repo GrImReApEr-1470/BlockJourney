@@ -333,6 +333,7 @@ void Player::onMove(int key,int x,int y) {
 }
 int loadingDown = 0;
 int loadingTop = 0;
+int loadingDownTop = 0;
 
 void Player::spawnLateralDown() {
 	// cout<<"sleeping in x"<<endl;
@@ -462,51 +463,57 @@ void Player::spawnDownTop() {
 	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, par_2);
 	glColor3f(0.2f, 0.2f, 0.1f);
 
+	glEnable(GL_TEXTURE_2D);
+				if (loadingDownTop==0) {
+				LoadTextureLava2();
+				loadingDownTop = 1;
+				}
 	glBegin(GL_POLYGON);
-		glVertex3f( 0.0 + x, 0.0 + y, 0.0 + z);
-		glVertex3f( 10.0 + x, 0.0 + y, 0.0 + z);
-		glVertex3f( 10.0 + x, 0.0 + y, 20.0 + z);
-		glVertex3f( 0.0 + x, 0.0 + y, 20.0 + z);
+		glTexCoord2f(1.0, 0.0);glVertex3f( 0.0 + x, 0.0 + y, 0.0 + z);
+		glTexCoord2f(0.0, 0.0);glVertex3f( 10.0 + x, 0.0 + y, 0.0 + z);
+		glTexCoord2f(0.0, 1.0);glVertex3f( 10.0 + x, 0.0 + y, 20.0 + z);
+		glTexCoord2f(1.0, 1.0);glVertex3f( 0.0 + x, 0.0 + y, 20.0 + z);
 	glEnd();
 	static GLfloat par_3[] = { 1.0, 1.1, 0.0, 1.0 };
 	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, par_3);
 	glColor3f(1.0f, 1.1f, 0.0f);
 	glBegin(GL_POLYGON);
-		glVertex3f( 0.0 + x, 10.0 + y, 0.0 + z);
-		glVertex3f( 10.0 + x, 10.0 + y, 0.0 + z);
-		glVertex3f( 10.0 + x, 10.0 + y, 20.0 + z);
-		glVertex3f( 0.0 + x, 10.0 + y, 20.0 + z);
+		glTexCoord2f(1.0, 0.0);glVertex3f( 0.0 + x, 10.0 + y, 0.0 + z);
+		glTexCoord2f(0.0, 0.0);glVertex3f( 10.0 + x, 10.0 + y, 0.0 + z);
+		glTexCoord2f(0.0, 1.0);glVertex3f( 10.0 + x, 10.0 + y, 20.0 + z);
+		glTexCoord2f(1.0, 1.0);glVertex3f( 0.0 + x, 10.0 + y, 20.0 + z);
 	glEnd();
 	static GLfloat par_4[] = { 0.2, 0.2, 0.1, 1.0 };
 	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, par_4);
 	glColor3f(0.2f, 0.2f, 0.1f);
 	glBegin(GL_POLYGON);
-		glVertex3f( 0.0 + x, 0.0 + y, 0.0 + z);
-		glVertex3f( 10.0 + x, 0.0 + y, 0.0 + z);
-		glVertex3f( 10.0 + x, 10.0 + y, 0.0 + z);
-		glVertex3f( 0.0 + x, 10.0 + y, 0.0 + z);
+		glTexCoord2f(1.0, 0.0);glVertex3f( 0.0 + x, 0.0 + y, 0.0 + z);
+		glTexCoord2f(0.0, 0.0);glVertex3f( 10.0 + x, 0.0 + y, 0.0 + z);
+		glTexCoord2f(0.0, 1.0);glVertex3f( 10.0 + x, 10.0 + y, 0.0 + z);
+		glTexCoord2f(1.0, 1.0);glVertex3f( 0.0 + x, 10.0 + y, 0.0 + z);
 	glEnd();
 
 	glBegin(GL_POLYGON);
-		glVertex3f( 0.0 + x, 0.0 + y, 20.0 + z);
-		glVertex3f( 10.0 + x, 0.0 + y, 20.0 + z);
-		glVertex3f( 10.0 + x, 10.0 + y, 20.0 + z);
-		glVertex3f( 0.0 + x, 10.0 + y, 20.0 + z);
+		glTexCoord2f(1.0, 0.0);glVertex3f( 0.0 + x, 0.0 + y, 20.0 + z);
+		glTexCoord2f(0.0, 0.0);glVertex3f( 10.0 + x, 0.0 + y, 20.0 + z);
+		glTexCoord2f(0.0, 1.0);glVertex3f( 10.0 + x, 10.0 + y, 20.0 + z);
+		glTexCoord2f(1.0, 1.0);glVertex3f( 0.0 + x, 10.0 + y, 20.0 + z);
 	glEnd();
 
 	glBegin(GL_POLYGON);
-		glVertex3f( 0.0 + x, 0.0 + y, 0.0 + z);
-		glVertex3f( 0.0 + x, 0.0 + y, 20.0 + z);
-		glVertex3f( 0.0 + x, 10.0 + y, 20.0 + z);
-		glVertex3f( 0.0 + x, 10.0 + y, 0.0 + z);
+		glTexCoord2f(1.0, 0.0);glVertex3f( 0.0 + x, 0.0 + y, 0.0 + z);
+		glTexCoord2f(0.0, 0.0);glVertex3f( 0.0 + x, 0.0 + y, 20.0 + z);
+		glTexCoord2f(0.0, 1.0);glVertex3f( 0.0 + x, 10.0 + y, 20.0 + z);
+		glTexCoord2f(1.0, 1.0);glVertex3f( 0.0 + x, 10.0 + y, 0.0 + z);
 	glEnd();
 
 	glBegin(GL_POLYGON);
-		glVertex3f( 10.0 + x, 0.0 + y, 0.0 + z);
-		glVertex3f( 10.0 + x, 0.0 + y, 20.0 + z);
-		glVertex3f( 10.0 + x, 10.0 + y, 20.0 + z);
-		glVertex3f( 10.0 + x, 10.0 + y, 0.0 + z);
+		glTexCoord2f(1.0, 0.0);glVertex3f( 10.0 + x, 0.0 + y, 0.0 + z);
+		glTexCoord2f(0.0, 0.0);glVertex3f( 10.0 + x, 0.0 + y, 20.0 + z);
+		glTexCoord2f(0.0, 1.0);glVertex3f( 10.0 + x, 10.0 + y, 20.0 + z);
+		glTexCoord2f(1.0, 1.0);glVertex3f( 10.0 + x, 10.0 + y, 0.0 + z);
 	glEnd();
+	glDisable(GL_TEXTURE_2D);
 }
 
 void play_block_audio(string audioFile)
