@@ -141,7 +141,7 @@ void Game::level1()
 		cout << "GAME OVER";
 		if(playsplosh)
 		{
-        	thread_audio("splosh.mp3");
+        	thread_audio("music/splosh.mp3");
         	playsplosh = false;
         }
 
@@ -237,7 +237,7 @@ void Game::level2() {
 		cout << "GAME OVER";
 		if(playsplosh)
 		{
-        	thread_audio("splosh.mp3");
+        	thread_audio("music/splosh.mp3");
         	playsplosh = false;
         }
 
@@ -334,7 +334,7 @@ void Game::level3()
 		cout << "GAME OVER";
 		if(playsplosh)
 		{
-        	thread_audio("splosh.mp3");
+        	thread_audio("music/splosh.mp3");
         	playsplosh = false;
         }
 
@@ -429,7 +429,7 @@ void Game::level4()
 		cout << "GAME OVER";
 		if(playsplosh)
 		{
-        	thread_audio("splosh.mp3");
+        	thread_audio("music/splosh.mp3");
         	playsplosh = false;
         }
 
@@ -465,7 +465,7 @@ void Game::display()
 
 	case LEVEL2:
 	    if(winsound[0])
-	    	thread_audio("win.mp3");
+	    	thread_audio("music/win.mp3");
 	    winsound[0] = false;
 	    winsound[1] = true;
 		shape = &player;
@@ -474,7 +474,7 @@ void Game::display()
 
 	case LEVEL3:
 		if(winsound[1])
-	    	thread_audio("win.mp3");
+	    	thread_audio("music/win.mp3");
 	    winsound[1] = false;
 	    winsound[2] = true;
 		shape = &player;
@@ -484,7 +484,7 @@ void Game::display()
 
 	case LEVEL4:
 	    if(winsound[2])
-	    	thread_audio("win.mp3");
+	    	thread_audio("music/win.mp3");
 	    winsound[2] = false;
 	    winsound[3] = true;
 		shape = &player;
@@ -553,24 +553,24 @@ void play_terminal_audio(string audioFile)
 
     /* open the file and get the decoding format */
  
-        mpg123_volume(mh, 1.0f);
-    	mpg123_open(mh, &audioFile[0]);
-    	mpg123_getformat(mh, &rate, &channels, &encoding);
+	mpg123_volume(mh, 1.0f);
+	mpg123_open(mh, &audioFile[0]);
+	mpg123_getformat(mh, &rate, &channels, &encoding);
 
-    	/* set the output format and open the output device */
-    	format.bits = mpg123_encsize(encoding) * 8;
-    	format.rate = rate;
-    	format.channels = channels;
-    	format.byte_format = AO_FMT_NATIVE;
-    	format.matrix = 0;
-    	dev = ao_open_live(driver, &format, NULL);
+	/* set the output format and open the output device */
+	format.bits = mpg123_encsize(encoding) * 8;
+	format.rate = rate;
+	format.channels = channels;
+	format.byte_format = AO_FMT_NATIVE;
+	format.matrix = 0;
+	dev = ao_open_live(driver, &format, NULL);
 
-    	/* decode and play */
-    	char *p =(char *)buffer;
-    	while (mpg123_read(mh, buffer, buffer_size, &done) == MPG123_OK)
-    	{   
-        	ao_play(dev, p, done);
-    	}
+	/* decode and play */
+	char *p =(char *)buffer;
+	while (mpg123_read(mh, buffer, buffer_size, &done) == MPG123_OK)
+	{   
+		ao_play(dev, p, done);
+	}
 	
     /* clean up */
     free(buffer);

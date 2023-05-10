@@ -62,7 +62,7 @@ void LoadTextureLava2(void)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     int width, height;
 
-    unsigned char* image = SOIL_load_image("texture.jpg", &width, &height, 0, SOIL_LOAD_RGB);
+    unsigned char* image = SOIL_load_image("textures/texture.jpg", &width, &height, 0, SOIL_LOAD_RGB);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
 
 }
@@ -261,7 +261,7 @@ void printLastKey(int last ){
 void Player::onMove(int key,int x,int y) {
 	cout<<this->pos<<this->temp_pos<<endl;
 	this->pos = this->temp_pos;
-	std::thread audio_thread(play_block_audio, "wood.mp3");
+	std::thread audio_thread(play_block_audio, "music/wood.mp3");
     audio_thread.detach();
 	switch(key) {
 

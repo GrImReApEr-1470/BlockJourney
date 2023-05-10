@@ -76,7 +76,7 @@ void LoadTextureLava(void)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     int width, height;
 
-    unsigned char* image = SOIL_load_image("lava_texture.png", &width, &height, 0, SOIL_LOAD_RGB);
+    unsigned char* image = SOIL_load_image("textures/lava_texture.png", &width, &height, 0, SOIL_LOAD_RGB);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
 }
 
@@ -177,9 +177,6 @@ void computeDir(float deltaAngle) {
 
 
 void drawGround(){
-
-
-
 	int x = 0;
 	int y = 0;
 	int z = 0;
@@ -337,11 +334,11 @@ void titleScreen(void){
 		return;
 
 	glClearColor(0.300, 0.140, 0.140, 1.00);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 	if (mainMenu)
 	{
 		glEnable(GL_TEXTURE_2D);
-		LoadTextureTitle("game_title.jpg");
+		LoadTextureTitle("textures/game_title.jpg");
 		glBegin(GL_POLYGON);
 		glTexCoord2f(1.0, 0.0);glVertex3f( -100, 150.0, 0.0);
 		glTexCoord2f(0.0, 0.0);glVertex3f( 120, 150.0, 0.0);
@@ -376,7 +373,7 @@ void titleScreen(void){
 	else if (creds){
 
 		glEnable(GL_TEXTURE_2D);
-		LoadTextureTitle("credits.jpg");
+		LoadTextureTitle("textures/credits.jpg");
 		glBegin(GL_POLYGON);
 		glTexCoord2f(1.0, 0.0);glVertex3f( -100, 150.0, 0.0);
 		glTexCoord2f(0.0, 0.0);glVertex3f( 100, 150.0, 0.0);
@@ -405,7 +402,7 @@ void titleScreen(void){
 	else if (instr)
 	{
 		glEnable(GL_TEXTURE_2D);
-		LoadTextureTitle("instructions.jpg");
+		LoadTextureTitle("textures/instructions.jpg");
 		glBegin(GL_POLYGON);
 		glTexCoord2f(1.0, 0.0);glVertex3f( -100, 150.0, 0.0);
 		glTexCoord2f(0.0, 0.0);glVertex3f( 95, 150.0, 0.0);
@@ -430,7 +427,7 @@ void titleScreen(void){
 	else if (exitScreen)
 	{
 		glEnable(GL_TEXTURE_2D);
-		LoadTextureTitle("thanks.jpg");
+		LoadTextureTitle("textures/thanks.jpg");
 		glBegin(GL_POLYGON);
 		glTexCoord2f(1.0, 0.0);glVertex3f( -320, -240.0, 0.0);
 		glTexCoord2f(0.0, 0.0);glVertex3f( 320, -240.0, 0.0);
@@ -453,9 +450,9 @@ void victoryScreen(int value)
 	double p = ((double)rand()) / RAND_MAX;
 	int s = value%2;
 	if (s != 0)
-		LoadTextureTitle("victory1.jpg");
+		LoadTextureTitle("textures/victory1.jpg");
 	else
-		LoadTextureTitle("victory2.jpg");
+		LoadTextureTitle("textures/victory2.jpg");
 	glBegin(GL_POLYGON);
 	glTexCoord2f(1.0, 0.0);glVertex3f( -WIDTH, -HEIGHT, 0.0);
 	glTexCoord2f(0.0, 0.0);glVertex3f( WIDTH, -HEIGHT, 0.0);
@@ -463,6 +460,7 @@ void victoryScreen(int value)
 	glTexCoord2f(1.0, 1.0);glVertex3f( -WIDTH, HEIGHT, 0.0);
 	glEnd();
 	glDisable(GL_TEXTURE_2D);
+	
 	glutPostRedisplay();
 	glutTimerFunc(25, victoryScreen, value+1);
 }
@@ -470,12 +468,13 @@ void victoryScreen(int value)
 void renderScene(void) {
 	if((!playMusic) && (!isMute))
 	{
-		std::thread audio_thread(play_audio, "wrong-place.mp3");
+		std::thread audio_thread(play_audio, "music/wrong-place.mp3");
     	audio_thread.detach();
 	}
 	changeSize(currWidth, currHeight);
 	if (vicScreen)
 	{
+		glBindTexture(GL_TEXTURE_2D, 0);
 		glutTimerFunc(100, victoryScreen, 0);
 	}
 	else if (!title){
@@ -521,6 +520,7 @@ void renderScene(void) {
 	}
 	else
 	{
+		glBindTexture(GL_TEXTURE_2D, 0);
 		if (endProg)
 		{
 			sleep(4);
@@ -604,7 +604,7 @@ int main(int argc, char **argv) {
 
 	// init GLUT and create window
 	glutInit(&argc, argv);
-	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
+	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGB);
 	glutInitWindowPosition(0,0);
 	glutInitWindowSize(1920,1080);
 	glutCreateWindow("Block Journey Project");
