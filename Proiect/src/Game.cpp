@@ -17,11 +17,6 @@ float const unit = 10.0;
 void thread_audio(string);
 Shape *shape;
 Player player(0, 2, 0);
-Plate plate1(0, 0, 0);
-Plate plate2(unit, 0, 0);
-
-Plate finishPlate;
-Shape *playerShape;
 
 Plate plates[30];
 
@@ -512,6 +507,15 @@ void Game::display()
 void Game::start()
 {
 	gameStatus = LEVEL1;
+}
+void Game::resetGame()
+{
+	gameStatus = 0;
+	dead = 0;
+	level = 1;
+	playsplosh = true;
+	player.resetXYZ(0,2,0);
+	player.resetPlayer();
 }
 
 Game::~Game()

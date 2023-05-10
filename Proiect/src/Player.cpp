@@ -20,6 +20,10 @@ int topkey = 0;
 int rightKey = 0;
 int downKey = 0;
 
+int loadingDown = 0;
+int loadingTop = 0;
+int loadingDownTop = 0;
+
 int standing = 0;
 
 int themove = 0;
@@ -199,6 +203,37 @@ void Player::update() {
 
 
 }
+
+void Player::resetPlayer() {
+	leftKey = 0;
+	topkey = 0;
+	rightKey = 0;
+	downKey = 0;
+
+	loadingDown = 0;
+	loadingTop = 0;
+	loadingDownTop = 0;
+
+
+	standing = 0;
+
+	themove = 0;
+	lastMove = 0;
+	peLat = 0;
+	enum {
+		LEFT,
+		RIGHT,
+		TOP,
+		DOWN,
+		START
+	};
+
+	lastKey= 99;
+	currentKey = START;
+	pos = 0;
+	temp_pos = 0;
+
+}
 int k = 0;
 
 void printLastKey(int last ){
@@ -331,10 +366,6 @@ void Player::onMove(int key,int x,int y) {
 
 
 }
-int loadingDown = 0;
-int loadingTop = 0;
-int loadingDownTop = 0;
-
 void Player::spawnLateralDown() {
 	// cout<<"sleeping in x"<<endl;
 	static GLfloat par_3[] = { 0.2, 0.2, 0.1, 1.0 };

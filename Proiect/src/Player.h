@@ -14,7 +14,12 @@ public:
 	virtual ~Player();
 	void update();
 	void onMove(int key,int x,int y);
-
+	void resetXYZ(int x, int y, int z){
+		this->x = x;
+		this->y = y;
+		this->z = z;
+	}
+	void resetPlayer();
 	void spawnLateralDown();
 	void spawnFromTop();
 	void spawnDownTop();

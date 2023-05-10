@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <iostream>
+#include <bits/stdc++.h>
 #include "Plate.h"
 #include "Player.h"
 #include "Shape.h"
@@ -43,6 +44,7 @@ bool instr = false;			//for instructions screen
 bool creds = false;			//for credits screen
 bool exitScreen = false;	//for exit screen
 bool endProg = false;
+bool vicScreen = false;		//for victory screen
 
 #define unit 10
 #define BITS 8
@@ -150,7 +152,7 @@ void changeSize(int w, int h) {
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 	}
-	else
+	if (title || vicScreen)
 	{
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
@@ -245,6 +247,7 @@ void processKeys(unsigned char key, int x, int y) {
 		mainMenu = false;
 		creds = false;
 		instr = false;
+		vicScreen = false;
 		start3D = 1;
 		theGame->start();
 	}
@@ -254,6 +257,7 @@ void processKeys(unsigned char key, int x, int y) {
 		mainMenu = false;
 		creds = false;
 		instr = true;
+		vicScreen = false;
 		glutPostRedisplay();
 	}
 	else if (key == 'Q' || key == 'q')
@@ -263,6 +267,7 @@ void processKeys(unsigned char key, int x, int y) {
 		creds = false;
 		instr = false;
 		exitScreen = true;
+		vicScreen = false;
 		glutPostRedisplay();
 	}
 	else if (key == 'C' || key == 'c')
@@ -271,14 +276,23 @@ void processKeys(unsigned char key, int x, int y) {
 		mainMenu = false;
 		creds = true;
 		instr = false;
+		vicScreen = false;
+		glutPostRedisplay();
+	}
+	else if (key == 'V' || key == 'v')
+	{
+		vicScreen = true;
+		theGame->resetGame();
 		glutPostRedisplay();
 	}
 	else if (key == 27)
 	{
+		theGame->resetGame();
 		title = true;
 		mainMenu = true;
 		creds = false;
 		instr = false;
+		vicScreen = false;
 		start3D = 0;
 		loading = 0;
 		angle = 0.0f;
@@ -286,7 +300,7 @@ void processKeys(unsigned char key, int x, int y) {
 		x=0.0f, z=0.0f;
 		deltaAngle = 0.0f;
 		deltaMove = 0;
-		extern Game* theGame;
+		//extern Game* theGame;
 		glutPostRedisplay();
 	}
 	else if (key == 's' || key == 'S')
@@ -319,6 +333,9 @@ void exitAnimation(int value)
 }
 
 void titleScreen(void){
+	if (vicScreen)
+		return;
+
 	glClearColor(0.300, 0.140, 0.140, 1.00);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	if (mainMenu)
@@ -425,10 +442,29 @@ void titleScreen(void){
 	}
 }
 
-void victoryScreen()
+void victoryScreen(int value)
 {
-	glClearColor(0.300, 0.140, 0.140, 1.00);
+	//cout << value <<endl;
+	if (!vicScreen)
+		return;
+	glClearColor(0, 0, 0, 1.00);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glEnable(GL_TEXTURE_2D);
+	double p = ((double)rand()) / RAND_MAX;
+	int s = value%2;
+	if (s != 0)
+		LoadTextureTitle("victory1.jpg");
+	else
+		LoadTextureTitle("victory2.jpg");
+	glBegin(GL_POLYGON);
+	glTexCoord2f(1.0, 0.0);glVertex3f( -WIDTH, -HEIGHT, 0.0);
+	glTexCoord2f(0.0, 0.0);glVertex3f( WIDTH, -HEIGHT, 0.0);
+	glTexCoord2f(0.0, 1.0);glVertex3f( WIDTH, HEIGHT, 0.0);
+	glTexCoord2f(1.0, 1.0);glVertex3f( -WIDTH, HEIGHT, 0.0);
+	glEnd();
+	glDisable(GL_TEXTURE_2D);
+	glutPostRedisplay();
+	glutTimerFunc(25, victoryScreen, value+1);
 }
 
 void renderScene(void) {
@@ -438,7 +474,11 @@ void renderScene(void) {
     	audio_thread.detach();
 	}
 	changeSize(currWidth, currHeight);
-	if (!title){
+	if (vicScreen)
+	{
+		glutTimerFunc(100, victoryScreen, 0);
+	}
+	else if (!title){
 		glClearColor(0.300, 0.140, 0.140, 1.00);
 			if (deltaMove)
 				computePos(deltaMove);
@@ -470,9 +510,11 @@ void renderScene(void) {
 				}
 			if (theGame->gameStatus == 100)
 			{
-				victoryScreen();
-			}
+				theGame->resetGame();
+				vicScreen = true;
 				glutPostRedisplay();
+			}
+			glutPostRedisplay();
 
 
 				myinit();
@@ -558,6 +600,7 @@ void play_audio(string audioFile)
 int main(int argc, char **argv) {
 
 	theGame = new Game();
+	srand(time(0));
 
 	// init GLUT and create window
 	glutInit(&argc, argv);

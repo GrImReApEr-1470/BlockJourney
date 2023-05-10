@@ -9,6 +9,7 @@ class Game
 public:
 	Game();
 	int gameStatus;
+	int dead;
 	void onMove(int key, int x, int y);
 	void update();
 	void display();
@@ -17,7 +18,10 @@ public:
 	void level2();
 	void level3();
 	void level4();
-
+	void setGameStatus(int x) {
+		this->gameStatus = x;
+	}
+	void resetGame();
 	virtual ~Game();
 };
 
