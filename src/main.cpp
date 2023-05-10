@@ -46,6 +46,7 @@ bool mainMenu = true; 		//for main-menu
 bool instr = false;			//for instructions screen
 bool creds = false;			//for credits screen
 bool exitScreen = false;	//for exit screen
+bool exitPrompt = false;	//for exit prompt
 bool endProg = false;
 bool vicScreen = false;		//for victory screen
 
@@ -155,7 +156,7 @@ void changeSize(int w, int h) {
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 	}
-	if (title || vicScreen)
+	if (title || vicScreen || exitPrompt)
 	{
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
@@ -188,7 +189,7 @@ void drawGround(){
 	glColor3f(1.0f, 0.0f, 0.0f);
 	glEnable(GL_TEXTURE_2D);
 	if (loading == 0) {
-	LoadTextureLava();
+		LoadTextureLava();
 		loading = 1;
 	}
 	glBegin(GL_POLYGON);
@@ -242,7 +243,7 @@ void processKeys(unsigned char key, int x, int y) {
 
 	if (key == ' ')
 	{
-		
+		if ((title || vicScreen) && (!exitPrompt)){
 		title = false;
 		mainMenu = false;
 		creds = false;
@@ -250,64 +251,68 @@ void processKeys(unsigned char key, int x, int y) {
 		vicScreen = false;
 		start3D = 1;
 		theGame->start();
+		}
 	}
 	else if (key == 'I' || key == 'i')
 	{
-		title = true;
-		mainMenu = false;
-		creds = false;
-		instr = true;
-		vicScreen = false;
+		if (!exitPrompt)
+		{
+			title = true;
+			mainMenu = false;
+			creds = false;
+			instr = true;
+			vicScreen = false;
+		}
 		glutPostRedisplay();
 	}
 	else if (key == 'Q' || key == 'q')
 	{
-		title = true;
-		mainMenu = false;
-		creds = false;
-		instr = false;
-		exitScreen = true;
-		vicScreen = false;
+		exitPrompt = true;
 		glutPostRedisplay();
 	}
 	else if (key == 'C' || key == 'c')
 	{
-		title = true;
-		mainMenu = false;
-		creds = true;
-		instr = false;
-		vicScreen = false;
+		if (!exitPrompt)
+		{
+			title = true;
+			mainMenu = false;
+			creds = true;
+			instr = false;
+			vicScreen = false;
+		}
 		glutPostRedisplay();
 	}
 	else if (key == 'V' || key == 'v')
 	{
 		// vicScreen = true;
 		// theGame->resetGame();
-
-		currentCam = (currentCam+1)%2;
-		if (currentCam == 0)
+		if (!exitPrompt && !title && !vicScreen)
 		{
-			eyeX = 22.8;
-			eyeY = 50.0;
-			eyeZ = -58.75; 
-			centerX = 23.25;
-			centerY = 49.5;
-			centerZ = -57.85;
-			upX = 0;
-			upY = 50.0;
-			upZ = 0;
-		}
-		else if (currentCam == 1)
-		{
-			eyeX = 70.8;
-			eyeY = 130.0;
-			eyeZ = 0.75;  
-			centerX = 70.8;
-			centerY = 0.5;
-			centerZ = 45.85;
-			upX = 0;
-			upY = 10.0;
-			upZ = 0;
+			currentCam = (currentCam+1)%2;
+			if (currentCam == 0)
+			{
+				eyeX = 22.8;
+				eyeY = 50.0;
+				eyeZ = -58.75; 
+				centerX = 23.25;
+				centerY = 49.5;
+				centerZ = -57.85;
+				upX = 0;
+				upY = 50.0;
+				upZ = 0;
+			}
+			else if (currentCam == 1)
+			{
+				eyeX = 70.8;
+				eyeY = 130.0;
+				eyeZ = 0.75;  
+				centerX = 70.8;
+				centerY = 0.5;
+				centerZ = 45.85;
+				upX = 0;
+				upY = 10.0;
+				upZ = 0;
+			}
 		}
 		glutPostRedisplay();
 	}
@@ -327,6 +332,28 @@ void processKeys(unsigned char key, int x, int y) {
 	{
 		isMute = (!isMute);
 		playMusic = false;
+	}
+	else if (key == 'y' || key == 'Y')
+	{
+		if (exitPrompt)
+		{
+			title = true;
+			mainMenu = false;
+			creds = false;
+			instr = false;
+			exitPrompt = false;
+			exitScreen = true;
+			vicScreen = false;
+			glutPostRedisplay();
+		}
+	}
+	else if (key == 'n' || key == 'N')
+	{
+		if (exitPrompt)
+		{
+			exitPrompt = false;
+			glutPostRedisplay();
+		}
 	}
 }
 
@@ -492,6 +519,49 @@ void victoryScreen(int value)
 	glutTimerFunc(25, victoryScreen, value+1);
 }
 
+void exitPromptScreen()
+{
+	glClearColor(0, 0, 0, 1.00);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	glPointSize(10);
+	glColor3f(1,1,1);
+	glBegin(GL_LINE_LOOP);
+	glVertex3i(-160, 120, -0.9);
+	glVertex3i(160, 120, -0.9);
+	glVertex3i(160, -120, -0.9);
+	glVertex3i(-160, -120, -0.9);
+	glEnd();
+	glPointSize(5);
+	glColor3f(1,1,1);
+	glBegin(GL_LINE_LOOP);
+	glVertex3i(-157, 117, -0.9);
+	glVertex3i(157, 117, -0.9);
+	glVertex3i(157, -117, -0.9);
+	glVertex3i(-157, -117, -0.9);
+	glEnd();
+
+	//glColor3f(0,0,0);
+	glRasterPos3f(-48, 30, 0);
+	char heading1[] = "Do you want to quit the game?";
+	for (int i = 0; i<strlen(heading1); i++)
+		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, heading1[i]);
+
+	
+	glRasterPos3f(-65, -30, 0);
+	char heading2[] = "(Y)es";
+	for (int i = 0; i<strlen(heading2); i++)
+		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, heading2[i]);
+
+	glRasterPos3f(45, -30, 0);
+	char heading3[] = "(N)o";
+	for (int i = 0; i<strlen(heading3); i++)
+		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, heading3[i]);
+
+
+	
+}
+
 void renderScene(void) {
 	if((!playMusic) && (!isMute))
 	{
@@ -503,6 +573,11 @@ void renderScene(void) {
 	{
 		glBindTexture(GL_TEXTURE_2D, 0);
 		glutTimerFunc(100, victoryScreen, 0);
+	}
+	else if (exitPrompt)
+	{
+		exitPromptScreen();
+		glutPostRedisplay();
 	}
 	else if (!title){
 		glClearColor(0.300, 0.140, 0.140, 1.00);
@@ -640,7 +715,7 @@ int main(int argc, char **argv) {
 	glutDisplayFunc(renderScene);
 
 	glutReshapeFunc(changeSize);
-	glutIdleFunc(renderScene);
+	//glutIdleFunc(renderScene);
     
 
 	glutSpecialUpFunc(keyFunction);

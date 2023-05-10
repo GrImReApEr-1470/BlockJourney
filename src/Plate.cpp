@@ -17,7 +17,7 @@ void LoadTextureLava3(void)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     int width, height;
-    unsigned char* image = SOIL_load_image("textures/texture.jpg", &width, &height, 0, SOIL_LOAD_RGB);
+    unsigned char* image = SOIL_load_image("textures/texture_block.jpg", &width, &height, 0, SOIL_LOAD_RGB);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
     //SOIL_free_image_data(image);
     //glBindTexture(GL_TEXTURE_2D, 0);
@@ -29,7 +29,7 @@ void Plate::spawn() {
 	static GLfloat par_1[] = { 0.9, 0.9, 0.9, 1.0 };
 	 glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, par_1);
 
-	// Placa
+	// Place the plate
 		glColor3f(0.9f, 0.9f, 0.4f);
 		glEnable(GL_TEXTURE_2D);
 		if (loadingState == 0) {
