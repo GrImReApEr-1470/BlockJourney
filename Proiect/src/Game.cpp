@@ -132,8 +132,15 @@ void Game::level1()
 		}
 	}
 
-	if (matrice[player_i][player_j] == 0)
+	// if(player.temp_pos==1 && (matrice[player_i-1][player_j] == 0))
 
+	if ((player.temp_pos==1 && (matrice[player_i+1][player_j] == 0)) ||
+	 (player.temp_pos==2 && (matrice[player_i][player_j+1] == 0)) ||
+	 (matrice[player_i][player_j] == 0 || 
+	 shape->getX() < 0 || 
+	 shape->getZ() < 0 || 
+	 shape->getZ() > 90 || 
+	 shape->getX() > 140))
 	{   
 		cout << "GAME OVER";
 		if(playsplosh)
@@ -222,8 +229,14 @@ void Game::level2() {
 			shape->setZ(0);
 		}
 	}
-	if (matrice[player_i][player_j] == 0 || shape->getX()<0 || shape->getZ()<0 || shape->getZ()>90 || shape->getX()>140)
 
+	if ((player.temp_pos==1 && (matrice[player_i+1][player_j] == 0)) ||
+	 (player.temp_pos==2 && (matrice[player_i][player_j+1] == 0)) ||
+	 (matrice[player_i][player_j] == 0 || 
+	 shape->getX() < 0 || 
+	 shape->getZ() < 0 || 
+	 shape->getZ() > 90 || 
+	 shape->getX() > 140))
 	{  
 		cout << "GAME OVER";
 		if(playsplosh)
@@ -314,8 +327,13 @@ void Game::level3()
 	}
 
 
-	if (matrice[player_i][player_j] == 0 || shape->getX()<0 || shape->getZ()<0 || shape->getZ()>90 || shape->getX()>140)
-
+	if ((player.temp_pos==1 && (matrice[player_i+1][player_j] == 0)) ||
+	 (player.temp_pos==2 && (matrice[player_i][player_j+1] == 0)) ||
+	 (matrice[player_i][player_j] == 0 || 
+	 shape->getX() < 0 || 
+	 shape->getZ() < 0 || 
+	 shape->getZ() > 90 || 
+	 shape->getX() > 140))
 	{   
 		cout << "GAME OVER";
 		if(playsplosh)
@@ -404,7 +422,13 @@ void Game::level4()
 		}
 	}
 
-	if (matrice[player_i][player_j] == 0 || shape->getX()<0 || shape->getZ()<0 || shape->getZ()>90 || shape->getX()>140)
+	if ((player.temp_pos==1 && (matrice[player_i+1][player_j] == 0)) ||
+	 (player.temp_pos==2 && (matrice[player_i][player_j+1] == 0)) ||
+	 (matrice[player_i][player_j] == 0 || 
+	 shape->getX() < 0 || 
+	 shape->getZ() < 0 || 
+	 shape->getZ() > 90 || 
+	 shape->getX() > 140))
 	{   
 		cout << "GAME OVER";
 		if(playsplosh)
