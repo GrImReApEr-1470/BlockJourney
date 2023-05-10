@@ -22,16 +22,19 @@ using namespace std;
 void play_audio(string);
 bool playMusic = false;
 bool isMute = false;
-// angle of rotation for the camera direction
-float angle = 0.0f;
-// actual vector representing the camera's direction
-float lx=0.0f,lz=-1.0f;
-// XZ position of the camera
-float x=0.0f, z=0.0f;
-// the key states. These variables will be zero
-//when no key is being presses
-float deltaAngle = 0.0f;
-float deltaMove = 0;
+
+// CAMERA COORDINATES
+GLdouble eyeX = 22.8;
+GLdouble eyeY = 50.0;
+GLdouble eyeZ = -58.75; 
+GLdouble centerX = 23.25;
+GLdouble centerY = 49.5;
+GLdouble centerZ = -57.85;
+GLdouble upX = 0;
+GLdouble upY = 50.0;
+GLdouble upZ = 0;
+int currentCam = 0;
+
 // Saving current window size
 int currWidth = 1920;
 int currHeight = 1080;
@@ -162,18 +165,18 @@ void changeSize(int w, int h) {
 	}
 }
 
-void computePos(float deltaMove) {
+// void computePos(float deltaMove) {
 
-	x += deltaMove * lx * 0.1f;
-	z += deltaMove * lz * 0.1f;
-}
+// 	x += deltaMove * lx * 0.1f;
+// 	z += deltaMove * lz * 0.1f;
+// }
 
-void computeDir(float deltaAngle) {
+// void computeDir(float deltaAngle) {
 
-	angle += deltaAngle;
-	lx = sin(angle);
-	lz = -cos(angle);
-}
+// 	angle += deltaAngle;
+// 	lx = sin(angle);
+// 	lz = -cos(angle);
+// }
 
 
 void drawGround(){
@@ -278,8 +281,34 @@ void processKeys(unsigned char key, int x, int y) {
 	}
 	else if (key == 'V' || key == 'v')
 	{
-		vicScreen = true;
-		theGame->resetGame();
+		// vicScreen = true;
+		// theGame->resetGame();
+
+		currentCam = (currentCam+1)%2;
+		if (currentCam == 0)
+		{
+			eyeX = 22.8;
+			eyeY = 50.0;
+			eyeZ = -58.75; 
+			centerX = 23.25;
+			centerY = 49.5;
+			centerZ = -57.85;
+			upX = 0;
+			upY = 50.0;
+			upZ = 0;
+		}
+		else if (currentCam == 1)
+		{
+			eyeX = 70.8;
+			eyeY = 130.0;
+			eyeZ = 0.75;  
+			centerX = 70.8;
+			centerY = 0.5;
+			centerZ = 45.85;
+			upX = 0;
+			upY = 10.0;
+			upZ = 0;
+		}
 		glutPostRedisplay();
 	}
 	else if (key == 27)
@@ -292,12 +321,6 @@ void processKeys(unsigned char key, int x, int y) {
 		vicScreen = false;
 		start3D = 0;
 		loading = 0;
-		angle = 0.0f;
-		lx=0.0f,lz=-1.0f;
-		x=0.0f, z=0.0f;
-		deltaAngle = 0.0f;
-		deltaMove = 0;
-		//extern Game* theGame;
 		glutPostRedisplay();
 	}
 	else if (key == 's' || key == 'S')
@@ -420,9 +443,13 @@ void titleScreen(void){
 		for (int i = 0; i<strlen(heading2); i++)
 			glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, heading2[i]);
 		glRasterPos3f(-170, -40, 0);
-		char heading3[] = "The game ends when the block is standing upright over the hole in the maze.";
+		char heading3[] = "Player can even press V to toggle camera angles.";
 		for (int i = 0; i<strlen(heading3); i++)
 			glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, heading3[i]);
+		glRasterPos3f(-170, -60, 0);
+		char heading4[] = "The game ends when the block is standing upright over the hole in the maze.";
+		for (int i = 0; i<strlen(heading4); i++)
+			glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, heading4[i]);
 	}
 	else if (exitScreen)
 	{
@@ -479,44 +506,43 @@ void renderScene(void) {
 	}
 	else if (!title){
 		glClearColor(0.300, 0.140, 0.140, 1.00);
-			if (deltaMove)
-				computePos(deltaMove);
-			if (deltaAngle)
-				computeDir(deltaAngle);
+		// if (deltaMove)
+		// 	computePos(deltaMove);
+		// if (deltaAngle)
+		// 	computeDir(deltaAngle);
 
-			// Clear Color and Depth Buffers
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		// Clear Color and Depth Buffers
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-			// Reset transformations
-			glLoadIdentity();
+		// Reset transformations
+		glLoadIdentity();
 
-			gluLookAt(	22.8, 50.0, -58.75,
-						23.25, 49.5,  -57.85,
-							0.0f, 50.0f,  0.0f);
-
-
-			float cof[] = {0.6,0.7,0.7};
-			float poz[] = { 0, 100, 0, 1.0 };
-			glLightfv(GL_LIGHT0,GL_AMBIENT,cof);
-			glLightfv(GL_LIGHT0, GL_POSITION, poz);
-			glEnable(GL_LIGHTING);
-			glEnable(GL_LIGHT0);
-				drawGround();
+		gluLookAt(eyeX, eyeY, eyeZ, 
+				  centerX, centerY, centerZ, 
+               	  upX, upY, upZ);
 
 
-				if (start3D == 1) {
-				theGame->display();
-				}
-			if (theGame->gameStatus == 100)
-			{
-				theGame->resetGame();
-				vicScreen = true;
-				glutPostRedisplay();
-			}
-			glutPostRedisplay();
+		float cof[] = {0.6,0.7,0.7};
+		float poz[] = { 0, 100, 0, 1.0 };
+		glLightfv(GL_LIGHT0,GL_AMBIENT,cof);
+		glLightfv(GL_LIGHT0, GL_POSITION, poz);
+		glEnable(GL_LIGHTING);
+		glEnable(GL_LIGHT0);
+		drawGround();
+
+		if (start3D == 1) 
+		{
+			theGame->display();
+		}
+		if (theGame->gameStatus == 100)
+		{
+			theGame->resetGame();
+			vicScreen = true;
+		}
+		glutPostRedisplay();
 
 
-				myinit();
+		myinit();
 	}
 	else
 	{
