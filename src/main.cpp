@@ -386,38 +386,16 @@ void titleScreen(void){
 	glClearColor(0.300, 0.140, 0.140, 1.00);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 	if (mainMenu)
-	{
+	{	
 		glEnable(GL_TEXTURE_2D);
-		LoadTextureTitle("textures/game_title.jpg");
+		LoadTextureTitle("textures/menu screen.jpg");
 		glBegin(GL_POLYGON);
-		glTexCoord2f(1.0, 0.0);glVertex3f( -100, 150.0, 0.0);
-		glTexCoord2f(0.0, 0.0);glVertex3f( 120, 150.0, 0.0);
-		glTexCoord2f(0.0, 1.0);glVertex3f( 120, 190.0, 0.0);
-		glTexCoord2f(1.0, 1.0);glVertex3f( -100, 190.0, 0.0);
+		glTexCoord2f(1.0, 0.0);glVertex3f( -WIDTH, -HEIGHT, 0.0);
+		glTexCoord2f(0.0, 0.0);glVertex3f( WIDTH, -HEIGHT, 0.0);
+		glTexCoord2f(0.0, 1.0);glVertex3f( WIDTH, HEIGHT, 0.0);
+		glTexCoord2f(1.0, 1.0);glVertex3f( -WIDTH, HEIGHT, 0.0);
 		glEnd();
 		glDisable(GL_TEXTURE_2D);
-		
-		glRasterPos3f(-70, 00, 0);
-		char heading1[] = "Press Spacebar to start the game";
-		for (int i = 0; i<strlen(heading1); i++)
-			glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, heading1[i]);
-		glRasterPos3f(-70, -20, 0);
-		char heading2[] = "Press I to read instruction to the game";
-		for (int i = 0; i<strlen(heading2); i++)
-			glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, heading2[i]);
-		glRasterPos3f(-70, -40, 0);
-		char heading3[] = "Press C to see the credits";
-		for (int i = 0; i<strlen(heading3); i++)
-			glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, heading3[i]);
-		glRasterPos3f(-70,-60, 0);
-		char heading4[] = "Press Esc to return to the main screen at any time";
-		for (int i = 0; i<strlen(heading4); i++)
-			glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, heading4[i]);
-		glRasterPos3f(-70,-80, 0);
-		char heading5[] = "Press Q to Quit the game";
-		for (int i = 0; i<strlen(heading5); i++)
-			glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, heading5[i]);
-		
 		
 	}
 	else if (creds){
@@ -425,68 +403,34 @@ void titleScreen(void){
 		glEnable(GL_TEXTURE_2D);
 		LoadTextureTitle("textures/credits.jpg");
 		glBegin(GL_POLYGON);
-		glTexCoord2f(1.0, 0.0);glVertex3f( -100, 150.0, 0.0);
-		glTexCoord2f(0.0, 0.0);glVertex3f( 100, 150.0, 0.0);
-		glTexCoord2f(0.0, 1.0);glVertex3f( 100, 190.0, 0.0);
-		glTexCoord2f(1.0, 1.0);glVertex3f( -100, 190.0, 0.0);
+		glTexCoord2f(1.0, 0.0);glVertex3f( -WIDTH, -HEIGHT, 0.0);
+		glTexCoord2f(0.0, 0.0);glVertex3f( WIDTH, -HEIGHT, 0.0);
+		glTexCoord2f(0.0, 1.0);glVertex3f( WIDTH, HEIGHT, 0.0);
+		glTexCoord2f(1.0, 1.0);glVertex3f( -WIDTH, HEIGHT, 0.0);
 		glEnd();
 		glDisable(GL_TEXTURE_2D);
-
-		glRasterPos3f(-70, 00, 0);
-		char heading1[] = "Chaitanya Manohar Giri (20BCS034)";
-		for (int i = 0; i<strlen(heading1); i++)
-			glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, heading1[i]);
-		glRasterPos3f(-70, -20, 0);
-		char heading2[] = "Harshal Ram Dube (20BCS052)";
-		for (int i = 0; i<strlen(heading2); i++)
-			glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, heading2[i]);
-		glRasterPos3f(-70, -40, 0);
-		char heading3[] = "Prathamesh P Pai (20BCS103)";
-		for (int i = 0; i<strlen(heading3); i++)
-			glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, heading3[i]);
-		glRasterPos3f(-70,-60, 0);
-		char heading4[] = "Samuel Mathew (20BCS116)";
-		for (int i = 0; i<strlen(heading4); i++)
-			glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, heading4[i]);
 	}
 	else if (instr)
 	{
 		glEnable(GL_TEXTURE_2D);
 		LoadTextureTitle("textures/instructions.jpg");
 		glBegin(GL_POLYGON);
-		glTexCoord2f(1.0, 0.0);glVertex3f( -100, 150.0, 0.0);
-		glTexCoord2f(0.0, 0.0);glVertex3f( 95, 150.0, 0.0);
-		glTexCoord2f(0.0, 1.0);glVertex3f( 95, 190.0, 0.0);
-		glTexCoord2f(1.0, 1.0);glVertex3f( -100, 190.0, 0.0);
+		glTexCoord2f(1.0, 0.0);glVertex3f( -WIDTH, -HEIGHT, 0.0);
+		glTexCoord2f(0.0, 0.0);glVertex3f( WIDTH, -HEIGHT, 0.0);
+		glTexCoord2f(0.0, 1.0);glVertex3f( WIDTH, HEIGHT, 0.0);
+		glTexCoord2f(1.0, 1.0);glVertex3f( -WIDTH, HEIGHT, 0.0);
 		glEnd();
 		glDisable(GL_TEXTURE_2D);
-
-		glRasterPos3f(-170, 00, 0);
-		char heading1[] = "The objective of the game is to move the block along the maze.";
-		for (int i = 0; i<strlen(heading1); i++)
-			glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, heading1[i]);
-		glRasterPos3f(-170, -20, 0);
-		char heading2[] = "Player can use the arrow keys to move the block in 4 directions or press Esc to return to the main screen.";
-		for (int i = 0; i<strlen(heading2); i++)
-			glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, heading2[i]);
-		glRasterPos3f(-170, -40, 0);
-		char heading3[] = "Player can even press V to toggle camera angles.";
-		for (int i = 0; i<strlen(heading3); i++)
-			glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, heading3[i]);
-		glRasterPos3f(-170, -60, 0);
-		char heading4[] = "The game ends when the block is standing upright over the hole in the maze.";
-		for (int i = 0; i<strlen(heading4); i++)
-			glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, heading4[i]);
 	}
 	else if (exitScreen)
 	{
 		glEnable(GL_TEXTURE_2D);
-		LoadTextureTitle("textures/thanks.jpg");
+		LoadTextureTitle("textures/thank you.jpg");
 		glBegin(GL_POLYGON);
-		glTexCoord2f(1.0, 0.0);glVertex3f( -320, -240.0, 0.0);
-		glTexCoord2f(0.0, 0.0);glVertex3f( 320, -240.0, 0.0);
-		glTexCoord2f(0.0, 1.0);glVertex3f( 320, 240.0, 0.0);
-		glTexCoord2f(1.0, 1.0);glVertex3f( -320, 240.0, 0.0);
+		glTexCoord2f(1.0, 0.0);glVertex3f( -WIDTH, -HEIGHT, 0.0);
+		glTexCoord2f(0.0, 0.0);glVertex3f( WIDTH, -HEIGHT, 0.0);
+		glTexCoord2f(0.0, 1.0);glVertex3f( WIDTH, HEIGHT, 0.0);
+		glTexCoord2f(1.0, 1.0);glVertex3f( -WIDTH, HEIGHT, 0.0);
 		glEnd();
 		glDisable(GL_TEXTURE_2D);
 		endProg = true;
@@ -715,7 +659,7 @@ int main(int argc, char **argv) {
 	glutDisplayFunc(renderScene);
 
 	glutReshapeFunc(changeSize);
-	//glutIdleFunc(renderScene);
+	glutIdleFunc(renderScene);
     
 
 	glutSpecialUpFunc(keyFunction);
